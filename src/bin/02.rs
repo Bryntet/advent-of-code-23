@@ -18,7 +18,6 @@ impl Colour {
     }
 }
 
-
 struct MinimumColour {
     red: u32,
     green: u32,
@@ -26,16 +25,12 @@ struct MinimumColour {
 }
 
 fn check_if_colour_below_max(colours: &[Colour], max_red: u8, max_green: u8, max_blue: u8) -> bool {
-    colours.iter().all(|colour| {
-        match colour {
-            Colour::Red(n) => *n <= max_red,
-            Colour::Green(n) => *n <= max_green,
-            Colour::Blue(n) => *n <= max_blue
-        }
+    colours.iter().all(|colour| match colour {
+        Colour::Red(n) => *n <= max_red,
+        Colour::Green(n) => *n <= max_green,
+        Colour::Blue(n) => *n <= max_blue,
     })
 }
-
-
 
 pub fn part_one(input: &str) -> Option<u32> {
     Some(
@@ -64,8 +59,6 @@ pub fn part_one(input: &str) -> Option<u32> {
     )
 }
 
-
-
 pub fn part_two(input: &str) -> Option<u32> {
     Some(
         input
@@ -73,7 +66,8 @@ pub fn part_two(input: &str) -> Option<u32> {
             .filter_map(|l| {
                 let mut l = l.split(": ");
                 let game: u32 = l.next()?.split(' ').last()?.parse().ok()?;
-                let plays = l.next()?
+                let plays = l
+                    .next()?
                     .split("; ")
                     .map(|set| {
                         set.split(", ")
@@ -84,23 +78,40 @@ pub fn part_two(input: &str) -> Option<u32> {
                                 Colour::new(colour, number)
                             })
                             .collect::<Vec<Colour>>()
-                    }).map(|p| {
+                    })
+                    .map(|p| {
                         let mut red = 0;
                         let mut green = 0;
                         let mut blue = 0;
                         for colour in p {
                             match colour {
-                                Colour::Red(n) => if n > red {red = n},
-                                Colour::Green(n) => if n > green {green = n},
-                                Colour::Blue(n) => if n > blue {blue = n}
+                                Colour::Red(n) => {
+                                    if n > red {
+                                        red = n
+                                    }
+                                }
+                                Colour::Green(n) => {
+                                    if n > green {
+                                        green = n
+                                    }
+                                }
+                                Colour::Blue(n) => {
+                                    if n > blue {
+                                        blue = n
+                                    }
+                                }
                             }
                         }
-                        MinimumColour {red: red as u32, green: green as u32, blue: blue as u32}
-                });
+                        MinimumColour {
+                            red: red as u32,
+                            green: green as u32,
+                            blue: blue as u32,
+                        }
+                    });
                 let mut minimum_required = MinimumColour {
                     red: 0,
                     green: 0,
-                    blue: 0
+                    blue: 0,
                 };
                 for play in plays {
                     if play.red > minimum_required.red {
